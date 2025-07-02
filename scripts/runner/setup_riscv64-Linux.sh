@@ -22,6 +22,9 @@ HOME="$(getent passwd ${USER} | cut -d: -f6)" && export HOME="${HOME}"
 if command -v awk &>/dev/null && command -v sed &>/dev/null; then
  PATH="$(echo "${PATH}" | awk 'BEGIN{RS=":";ORS=":"}{gsub(/\n/,"");if(!a[$0]++)print}' | sed 's/:*$//')" ; export PATH
 fi
+
+# replace the default workspace
+LOCAL_BIN="${WORKSPACE}/.local/bin"
 #-------------------------------------------------------#
 ##Sanity Checks
 ##Check if it was recently initialized
@@ -80,14 +83,18 @@ else
        echo -e "\n[-] Passwordless sudo is NOT Configured"
        echo -e "\n[-] READ: https://web.archive.org/web/20230614212916/https://linuxhint.com/setup-sudo-no-password-linux/\n"
        #exit
-       export CONTINUE="NO"
-       return 1 || exit 1
+       export CONTINUE="YES" # continue even if sudo is not passwordless
+      #  return 1 || exit 1 
    fi
   fi
  ##Install Needed CMDs
   bash <(curl -qfsSL "https://raw.githubusercontent.com/pkgforge/devscripts/main/Linux/install_bins_curl.sh")
-  sudo curl -qfsSL "https://github.com/pkgforge/bin/releases/download/riscv64-Linux/trufflehog" -o "/usr/local/bin/trufflehog"
-  sudo chmod +x "/usr/local/bin/trufflehog"
+  curl -qfsSL "https://github.com/pkgforge/bin/releases/download/riscv64-Linux/trufflehog" -o "${LOCAL_BIN}/trufflehog"
+  chmod +x "${LOCAL_BIN}/trufflehog"
+  # Update PATH
+  echo "export PATH=\"${LOCAL_BIN}:\\$PATH\"" >> ~/.bashrc
+  source ~/.bashrc
+  
  ##Check Needed CMDs
  for DEP_CMD in eget gh glab minisign oras rclone shellcheck soar zstd; do
     case "$(command -v "${DEP_CMD}" 2>/dev/null)" in

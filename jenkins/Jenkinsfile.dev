@@ -124,10 +124,6 @@ pipeline {
                     # Download and patch builder script
                     curl -qfsSL "https://raw.githubusercontent.com/pkgforge/bincache/main/scripts/runner/builder.sh" -o "${SYSTMP}/BUILDER.sh"
                     
-                    # Patch the script to work without sudo
-                    sed -i 's/sudo //g' "${SYSTMP}/BUILDER.sh"
-                    sed -i '/require_sudo()/ {N;N;N;d;}' "${SYSTMP}/BUILDER.sh"  # Remove sudo check
-                    
                     dos2unix "${SYSTMP}/BUILDER.sh"
                     chmod +x "${SYSTMP}/BUILDER.sh"
                     
