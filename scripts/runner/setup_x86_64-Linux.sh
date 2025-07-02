@@ -80,8 +80,8 @@ else
        echo -e "\n[-] Passwordless sudo is NOT Configured"
        echo -e "\n[-] READ: https://web.archive.org/web/20230614212916/https://linuxhint.com/setup-sudo-no-password-linux/\n"
        #exit
-       export CONTINUE="NO"
-       return 1 || exit 1
+       export CONTINUE="YES"
+      #  return 1 || exit 1
    fi
   fi
  ##Install Needed CMDs
