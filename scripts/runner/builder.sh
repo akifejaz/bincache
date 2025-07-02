@@ -137,7 +137,7 @@ sbuild_builder()
    chmod +xwr "${INITSCRIPT}" && source "${INITSCRIPT}"
    #Check
    if [ "${CONTINUE}" != "YES" ]; then
-     echo -e "\n[✗] Failed To Initialize\n"
+     echo -e "\n[✗] Failed To Initialize $HOST_TRIPLET_R\n"
     exit 1
    fi
   ##Ulimits

@@ -80,10 +80,10 @@ else
        echo -e "\n[+] Passwordless sudo is Configured"
        sudo grep -E '^\s*[^#]*\s+ALL\s*=\s*\(\s*ALL\s*\)\s+NOPASSWD:' "/etc/sudoers" 2>/dev/null
    else
-       echo -e "\n[-] Passwordless sudo is NOT Configured"
+       export CONTINUE="YES" # continue even if sudo is not passwordless
+       echo -e "\n[-] 1 Passwordless sudo is NOT Configured"
        echo -e "\n[-] READ: https://web.archive.org/web/20230614212916/https://linuxhint.com/setup-sudo-no-password-linux/\n"
        #exit
-       export CONTINUE="YES" # continue even if sudo is not passwordless
       #  return 1 || exit 1 
    fi
   fi
@@ -94,7 +94,7 @@ else
   # Update PATH
   echo "export PATH=\"${LOCAL_BIN}:\\$PATH\"" >> ~/.bashrc
   source ~/.bashrc
-  
+
  ##Check Needed CMDs
  for DEP_CMD in eget gh glab minisign oras rclone shellcheck soar zstd; do
     case "$(command -v "${DEP_CMD}" 2>/dev/null)" in
