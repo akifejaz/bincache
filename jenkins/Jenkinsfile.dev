@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                     set -x
-                    echo "📦 Setting up build environment..."
+                    echo "Setting up build environment..."
                     
                     # Install core dependencies (without sudo)
                     apt-get update -y && apt-get install -y \
@@ -59,7 +59,7 @@ pipeline {
                     set -x
                     set +e
                     
-                    echo "📥 Installing tools to ${LOCAL_BIN}..."
+                    echo "Installing tools to ${LOCAL_BIN}..."
                     mkdir -p "${LOCAL_BIN}"
                     
                     # Install rclone locally
@@ -119,7 +119,7 @@ pipeline {
             steps {
                 sh '''#!/bin/bash
                     set -x
-                    echo "🏗️ Starting package builds..."
+                    echo "Starting package builds..."
                     
                     # Download and patch builder script
                     curl -qfsSL "https://raw.githubusercontent.com/akifejaz/bincache/refs/heads/main/scripts/runner/builder.sh" -o "${SYSTMP}/BUILDER.sh"
@@ -136,9 +136,9 @@ pipeline {
                     
                     # Process logs
                     if grep -qi "completed" "${SYSTMP}/BUILD.log"; then
-                        echo "✅ Build completed successfully"
+                        echo "Build completed successfully"
                     else
-                        echo "❌ Build encountered errors"
+                        echo "Build encountered errors"
                         grep -i "error\\|fail" "${SYSTMP}/BUILD.log" || true
                         exit 1
                     fi
@@ -150,7 +150,7 @@ pipeline {
         stage('Post-Build Cleanup') {
             steps {
                 sh '''#!/bin/bash
-                    echo "🧹 Cleaning up temporary files..."
+                    echo "Cleaning up temporary files..."
                     if [[ "${KEEP_LOGS}" != "YES" ]]; then
                         rm -rf "${SYSTMP}"
                     fi
@@ -161,17 +161,24 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/BUILD.log', allowEmptyArchive: true
+            script {
+                // Only archive if log exists
+                if (fileExists("${SYSTMP}/BUILD.log")) {
+                    archiveArtifacts artifacts: "${SYSTMP}/BUILD.log", allowEmptyArchive: true
+                }
+            }
             sh '''#!/bin/bash
-                echo "🧹 Cleaning up temporary files..."
-                rm -rf "${SYSTMP}"  // Cleanup unless KEEP_LOGS is set
+                # Safe cleanup - only remove if SYSTMP is under workspace
+                if [[ -n "${SYSTMP}" && "${SYSTMP}" == "${WORKSPACE}/"* ]]; then
+                    [[ "${KEEP_LOGS}" != "YES" ]] && rm -rf "${SYSTMP}"
+                fi
             '''
         }
         success {
-            echo "🎉 Pipeline completed successfully"
+            echo "Pipeline completed successfully"
         }
         failure {
-            echo "❌ Pipeline failed - check build logs"
+            echo "Pipeline failed - check build logs"
         }
     }
 }
