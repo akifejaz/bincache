@@ -131,7 +131,7 @@ sbuild_builder()
   #-------------------------------------------------------#
   ##Init
    INITSCRIPT="$(mktemp --tmpdir=${SYSTMP} XXXXXXXXX_init.sh)" && export INITSCRIPT="${INITSCRIPT}"
-   curl -qfsSL "https://raw.githubusercontent.com/pkgforge/${PKG_REPO}/refs/heads/main/scripts/runner/setup_${HOST_TRIPLET_R}.sh" -o "${INITSCRIPT}"
+   curl -qfsSL "https://raw.githubusercontent.com/akifejaz/${PKG_REPO}/refs/heads/main/scripts/runner/setup_${HOST_TRIPLET_R}.sh" -o "${INITSCRIPT}"
    chmod +xwr "${INITSCRIPT}" && source "${INITSCRIPT}"
    #Check
    if [ "${CONTINUE}" != "YES" ]; then
