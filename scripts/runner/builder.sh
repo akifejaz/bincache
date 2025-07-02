@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+set -e
+set -x
 #-------------------------------------------------------#
 ## <DO NOT RUN STANDALONE, meant for CI Only>
 ## Meant to Build & Upload All our Packages
@@ -46,7 +47,7 @@ sbuild_builder()
      HOST_TRIPLET="$(uname -m)-$(uname -s)"
    fi
    HOST_TRIPLET_R="$(uname -m)-$(uname -s)"
-   echo "Currunt Machine is : $HOST_TRIPLET_R" 
+   echo "Current Machine is : $HOST_TRIPLET_R"
    if [[ -z "${PKG_REPO+x}" || -z "${PKG_REPO//[[:space:]]/}" ]]; then
      PKG_REPO="bincache"
    fi
