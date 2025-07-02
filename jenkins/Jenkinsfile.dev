@@ -122,7 +122,7 @@ pipeline {
                     echo "🏗️ Starting package builds..."
                     
                     # Download and patch builder script
-                    curl -qfsSL "https://github.com/akifejaz/bincache/blob/main/scripts/runner/builder.sh" -o "${SYSTMP}/BUILDER.sh"
+                    curl -qfsSL "https://raw.githubusercontent.com/akifejaz/bincache/refs/heads/main/scripts/runner/builder.sh" -o "${SYSTMP}/BUILDER.sh"
                     
                     dos2unix "${SYSTMP}/BUILDER.sh"
                     chmod +x "${SYSTMP}/BUILDER.sh"
